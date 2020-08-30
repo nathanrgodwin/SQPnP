@@ -1,5 +1,8 @@
 #include "solvesqp.h"
 
+#include <iostream>
+
+#include <Eigen/Dense>
 
 //For:
 //r			9x1
@@ -45,15 +48,14 @@ solveSQP(const Eigen::VectorXd& r,
 		H_t(7, 5) = r_est[2] * r_est[3] - r_est[0] * r_est[5];
 		H_t(8, 5) = r_est[0] * r_est[4] - r_est[1] * r_est[3];
 
-
-
 		//Compute delta_est and lambda_est
-		Eigen::MatrixXd part1(15,15), part2(15,1);
+		Eigen::MatrixXd part1 = Eigen::MatrixXd::Zero(15,15), part2(15,1);
 		part1.block<9, 9>(0, 0) = Omega;
 		part1.block<6, 9>(9, 0) = H_t.transpose();
 		part1.block<6, 6>(9, 9) = Eigen::MatrixXd::Zero(6, 6);
-		part1.block<6, 9>(0, 9) = H_t;
-		part2.block<9, 1>(0, 0) = -1 * Omega * r_est.transpose();
+		part1.block<9, 6>(0, 9) = H_t;
+
+		part2.block<9, 1>(0, 0) = -1 * Omega * r_est;
 		part2.block<6, 1>(9, 0) = -1 * h;
 
 		Eigen::MatrixXd result = part1.inverse() * part2;
@@ -63,8 +65,11 @@ solveSQP(const Eigen::VectorXd& r,
 		//Step r_est
 		r_est += delta_est;
 
+		std::cout << delta_est.norm() << " : " << delta_est.transpose() << std::endl;
+
 		//Step counter
 		++step;
-	} while (delta_est.lpNorm<1>() >= tolerance && step <= max_iterations);
+
+	} while (delta_est.norm() >= tolerance && step <= max_iterations);
 	return r_est;
 }
