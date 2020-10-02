@@ -12,7 +12,7 @@ publisher={Springer}
 }
 ```
 
-As of 10/1/2020, outperforms author's implementation by approximately 50us.
+As of 10/1/2020, outperforms author's implementation by approximately 25-30us.
 
 ## Dependencies
 - OpenCV >= 3.4
