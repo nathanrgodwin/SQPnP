@@ -1,0 +1,3 @@
+[submodule "3rdparty/sqpnp"]
+	path = 3rdparty/sqpnp
+	url = https://github.com/terzakig/sqpnp.git
