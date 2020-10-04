@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <random>
 
 #include <cv/sqpnp/sqpnp.h>
 #include "GenerateSyntheticPoints.h"
@@ -9,14 +10,19 @@
 int main()
 {
     int N = 1e3;
-    int n = 4;
     double std_pixels = sqrt(7);
 
     long long avg_duration = 0;
     double avg_error = 0;
     int failures = 0;
+    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(3, 10);
+
     for (int i = 0; i < N; i++)
     {
+        int n = distrib(gen);
         cv::Matx<double, 3, 3> Rt;
         cv::Vec<double, 3> tt;
         std::vector<cv::Point3_<double>> points;

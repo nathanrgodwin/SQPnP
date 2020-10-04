@@ -94,9 +94,9 @@ private:
 	/*
 	* @brief                Processes a solution and sorts it by error.
 	* @param solution       The solution to evaluate.
-	* @param error          The current minimum error.
+	* @param min_error          The current minimum error.
 	*/
-	void checkSolution(SQPSolution& solution, double& error);
+	void checkSolution(SQPSolution& solution, double& min_error);
 
 	/*
 	* @brief                Computes the determinant of a matrix stored in row-major format.

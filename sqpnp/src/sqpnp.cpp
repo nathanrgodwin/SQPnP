@@ -89,6 +89,7 @@ void PoseSolver::solve(InputArray objectPoints, InputArray imagePoints, OutputAr
 	CV_Assert(objectPoints.rows() == 1 || objectPoints.cols() == 1);
 	CV_Assert(objectPoints.rows() >= 3 || objectPoints.cols() >= 3);
 	CV_Assert(imagePoints.rows() == 1 || imagePoints.cols() == 1);
+	CV_Assert(imagePoints.rows() * imagePoints.cols() == objectPoints.rows() * objectPoints.cols());
 
 	Mat _imagePoints;
 	if (imgType == CV_32FC2)
@@ -240,7 +241,7 @@ void PoseSolver::computeOmega(InputArray objectPoints, InputArray imagePoints)
 
 	omega_ += qa_sum.t() * p_;
 
-	cv::SVD omega_svd(omega_);
+	cv::SVD omega_svd(omega_, cv::SVD::FULL_UV);
 	s_ = omega_svd.w;
 	u_ = omega_svd.u;
 
@@ -711,16 +712,16 @@ inline bool PoseSolver::positiveDepth(const SQPSolution& solution) const
 	return (r(6) * mean(0) + r(7) * mean(1) + r(8) * mean(2) + t(2) > 0);
 }
 
-void PoseSolver::checkSolution(SQPSolution& solution, double& error)
+void PoseSolver::checkSolution(SQPSolution& solution, double& min_error)
 {
 	if (positiveDepth(solution))
 	{
 		solution.sq_error = (omega_ * solution.r_hat).ddot(solution.r_hat);
-		if (fabs(error - solution.sq_error) > EQUAL_SQUARED_ERRORS_DIFF)
+		if (fabs(min_error - solution.sq_error) > EQUAL_SQUARED_ERRORS_DIFF)
 		{
-			if (error > solution.sq_error)
+			if (min_error > solution.sq_error)
 			{
-				error = solution.sq_error;
+				min_error = solution.sq_error;
 				solutions_[0] = solution;
 				num_solutions_ = 1;
 			}
@@ -745,7 +746,7 @@ void PoseSolver::checkSolution(SQPSolution& solution, double& error)
 			{
 				solutions_[num_solutions_++] = solution;
 			}
-			if (error > solution.sq_error) error = solution.sq_error;
+			if (min_error > solution.sq_error) min_error = solution.sq_error;
 		}
 	}
 }
