@@ -15,7 +15,7 @@
 
 int main()
 {
-    int N = 1e5;
+    int N = 1e6;
     double std_pixels = sqrt(7);
 
     long long cv_avg_duration = 0;
