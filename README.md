@@ -12,7 +12,13 @@ publisher={Springer}
 }
 ```
 
+<a href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123460460.pdf">Paper</a>
+
 As of 10/1/2020, outperforms author's implementation by approximately 25-30us.
+
+### OpenCV Integration
+This code has been accepted and merged into OpenCV <a href="https://docs.opencv.org/3.4.13/d9/d0c/group__calib3d.html#ga357634492a94efe8858d0ce1509da869">3.4.13</a> and <a href="https://docs.opencv.org/4.5.1/d9/d0c/group__calib3d.html#ga357634492a94efe8858d0ce1509da869">4.5.1</a>. 
+
 
 ## Dependencies
 - OpenCV >= 3.4
